@@ -1,1 +1,6 @@
 # projetoMarketplace
+
+## Requisitos
+
+- [ ] CRUD
+- [ ] Autenticação
