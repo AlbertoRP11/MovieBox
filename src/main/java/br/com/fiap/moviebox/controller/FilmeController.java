@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+//import org.springframework.hateoas.PagedResourcesAssembler;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -36,6 +37,9 @@ public class FilmeController {
 
     @Autowired
     FilmeRepository filmeRepository;
+
+//    @Autowired
+//    PagedResourcesAssembler<Filme> pageAssembler;
 
     @GetMapping
     @Cacheable
@@ -71,15 +75,15 @@ public class FilmeController {
 
 
     @DeleteMapping("{id}")
-    @CacheEvict(allEntries = true)
+    @ResponseStatus(code = HttpStatus.NO_CONTENT)
     public ResponseEntity<Object> destroy(@PathVariable Long id) {
-        log.info("apagando filme {}", id);
-
-        verificarSeExisteFilme(id);
+        filmeRepository.findById(id).orElseThrow(
+                () -> new IllegalArgumentException("movimentação não encontrada")
+        );
 
         filmeRepository.deleteById(id);
-        return ResponseEntity.noContent().build();
 
+        return ResponseEntity.noContent().build();
     }
 
 
